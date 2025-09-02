@@ -7,7 +7,7 @@ from sklearn import preprocessing
 scaler = preprocessing.MinMaxScaler()
 
 # Read, Convert & Flatten 
-img = cv.imread("images/image_1.jpg")
+img = cv.imread("images/image_10.jpg")
 img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 pixels = scaler.fit_transform(img_rgb.reshape((-1, 3)))
 
