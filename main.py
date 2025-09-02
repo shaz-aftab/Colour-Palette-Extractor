@@ -3,11 +3,20 @@ import matplotlib.pyplot as plt
 import cv2 as cv
 from sklearn.cluster import KMeans
 from sklearn import preprocessing
+import tkinter
+from tkinter import filedialog as fidia
 
 scaler = preprocessing.MinMaxScaler()
 
+# Tkinter
+root = tkinter.Tk()
+root.withdraw()
+
 # Read, Convert & Flatten 
-img = cv.imread("images/image_10.jpg")
+file = fidia.askopenfilename()
+if file: 
+    with open(file, "rb"):
+        img = cv.imread(file)
 img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 pixels = scaler.fit_transform(img_rgb.reshape((-1, 3)))
 
