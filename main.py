@@ -3,26 +3,44 @@ import matplotlib.pyplot as plt
 import cv2 as cv
 from sklearn.cluster import KMeans
 from sklearn import preprocessing
-import tkinter 
-from tkinter import *
-from tkinter import filedialog as fidia
+import sys
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow, QPushButton
 
 scaler = preprocessing.MinMaxScaler()
-root = tkinter.Tk()
 
 # Clustering
 k = 5
 kmeans = KMeans(n_clusters=k, random_state=42)
 
-def main():
-    # Read, Convert & Flatten 
-    file = fidia.askopenfilename()
-    if file: 
+img = None
+
+# Function to get the file
+def get_file():
+    file, _ = QFileDialog.getOpenFileName(
+        None,
+        "Select a File you would like to read the colour palette of.",
+        "",
+        "Image Files (*.png *.jpg *.jpeg *.bmp *.gif);;All Files (*)"
+    )
+
+    if file:
         with open(file, "rb"):
-            img = cv.imread(file)
+            return file
+    else:
+        print("Error: No file has been selected.")
+
+def palette():    
+
+    file = get_file()
+    if not file:
+        return
+    
+    # Read, Convert & Flatten 
+    img = cv.imread(file)
     img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     pixels = scaler.fit_transform(img_rgb.reshape((-1, 3)))
-    
+
     kmeans.fit(pixels)
 
     colours_normalized = kmeans.cluster_centers_
@@ -43,19 +61,22 @@ def main():
     plt.axis("off")
     plt.show()
 
-root.geometry("350x150")
-frame = Frame(root)
-frame.pack()
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-CENTER_FRAME = Frame(root)
-CENTER_FRAME.pack()
-CENTER_FRAME.place(relx=.5, rely=.5, anchor="center")
+        self.setWindowTitle("Colour Palette Detector")
 
-label = Label(frame, text = "\nDetect Colour Palette")
-label.pack()
+        button = QPushButton("Find Palette")
+        button.setCheckable(True)
+        button.clicked.connect(palette)
 
-detect = Button(CENTER_FRAME, text = "Detect", command= main() )
-detect.pack(padx = 3, pady = 3)
+        self.setFixedSize(QSize(300, 200))
+        self.setCentralWidget(button)
 
-root.title("Colour Palette Detector")
-root.mainloop()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec()
