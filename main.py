@@ -4,7 +4,7 @@ import cv2 as cv
 from sklearn.cluster import KMeans
 from sklearn import preprocessing
 import sys
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow, QPushButton, QHBoxLayout, QWidget
 
 scaler = preprocessing.MinMaxScaler()
