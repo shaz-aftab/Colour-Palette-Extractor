@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 from sklearn import preprocessing
 import sys
 from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow, QPushButton
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow, QPushButton, QHBoxLayout, QWidget
 
 scaler = preprocessing.MinMaxScaler()
 
@@ -67,13 +67,20 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Colour Palette Detector")
 
-        button = QPushButton("Find Palette")
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+
+        l = QHBoxLayout()
+
+        button = QPushButton("Find Colour Palette")
+        l.addWidget(button)
+
+        central_widget.setLayout(l)
+
         button.setCheckable(True)
         button.clicked.connect(palette)
 
-        self.setFixedSize(QSize(300, 200))
-        self.setCentralWidget(button)
-
+        self.setFixedSize(QSize(300, 50))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
